@@ -1,0 +1,32 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "SDL2_DIR",
+          "value": "C:/Users/Denise/Downloads/SDL2-devel-2.28.5-VC",
+          "type": "PATH"
+        },
+        {
+          "name": "SDL2DIR_DIR",
+          "value": "SDL2DIR_DIR-NOTFOUND",
+          "type": "PATH"
+        },
+        {
+          "name": "VCPKG_MANIFEST_MODE",
+          "value": "False",
+          "type": "BOOL"
+        }
+      ]
+    }
+  ]
+}
