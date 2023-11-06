@@ -28,16 +28,17 @@ In this project, we build our own C++ application or extend this Snake game, fol
   * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
 * SDL2 >= 2.0
   * All installation instructions can be found [here](https://wiki.libsdl.org/Installation)
+  * On Windows, once you download SDL2, add its path to the CMAKE_PREFIX_PATH environment variable.
   >Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source. 
 * gcc/g++ >= 5.4
   * Linux: gcc / g++ is installed by default on most Linux distros
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
  
-For Windows, if not using vcpkg, implement one of the following approaches:
+For Windows, if not using vcpkg, follow these steps:
 
-1. Copy the SDL2.dll file (from your local installation) and paste it in the directory of your final .exe file
-2. Add the location of the SDL2.dll to your system PATH environment variable (i.e. ...\lib\x64)
+1. Once you download SDL2, add its path to the CMAKE_PREFIX_PATH environment variable. This allows find_package(SDL2 REQUIRED) in CMakeLists.txt to find SDL2.
+2. Add the location of the SDL2.dll to your system PATH environment variable (i.e. ...\lib\x64).
 
 ## Basic Build Instructions
 
