@@ -3,7 +3,9 @@
 #include "game.h"
 #include "renderer.h"
 
-int main(int argc, char* argv[]) {
+// SDL2.dll copy not required with .exe because it's location has been added to the system PATH environment variable
+int main(int argc, char* argv[]) 
+{
   constexpr std::size_t kFramesPerSecond{60};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
   constexpr std::size_t kScreenWidth{640};

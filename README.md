@@ -6,6 +6,18 @@ The code for this repo was inspired by [this](https://codereview.stackexchange.c
 
 In this project, we build our own C++ application or extend this Snake game, following the principles we have learned throughout the C++ Nanodegree Program. This project demonstrates my ability to independently create applications using a wide range of C++ features.
 
+## New Features Added to the Game
+
+* Writing highest score to local file and always displaying it on screen by reading from this file.
+* Random spawning of double points and special boosts (such as arc projectiles).
+* Snake can fire a magic projectile from a distance to capture a point by pressing the space bar (which earns more points and removes length).
+* Snake can capture short-lived items to reduce its length.
+* Random spawning of short-lived poisons that remove projectiles, add length, and/or remove points.
+* Algorithm-driven slow moving NPC snake that fires at us (destroyable with projectiles).
+* Bonus: Add HP/FP bars with random spawning of replenishing items.
+* Bonus: Random initialization of static/moving obstacles (destroyable with projectiles).
+* Bonus: Special phasing item that provides timed invulnerability to self-contact.
+
 ## Dependencies for Running Locally
 
 * cmake >= 3.7
