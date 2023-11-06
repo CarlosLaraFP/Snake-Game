@@ -22,7 +22,10 @@ In this project, we build our own C++ application or extend this Snake game, fol
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
  
-For Windows, if not using vcpkg, copy the SDL2 .dll file (from your local installation) and paste it in the directory of your final .exe file.
+For Windows, if not using vcpkg, implement one of the following approaches:
+
+1. Copy the SDL2 .dll file (from your local installation) and paste it in the directory of your final .exe file
+2. Add the location of the SDL2.dll your your system PATH environment variable (i.e. ...\lib\x64)
 
 ## Basic Build Instructions
 
