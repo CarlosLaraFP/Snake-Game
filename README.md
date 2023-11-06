@@ -21,6 +21,8 @@ In this project, we build our own C++ application or extend this Snake game, fol
   * Linux: gcc / g++ is installed by default on most Linux distros
   * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   * Windows: recommend using [MinGW](http://www.mingw.org/)
+ 
+For Windows, if not using vcpkg, copy the SDL2 .dll file (from your local installation) and paste it in the directory of your final .exe file.
 
 ## Basic Build Instructions
 
