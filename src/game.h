@@ -22,12 +22,14 @@ public:
     int GetHighScore() const;
     int GetSnakeSize() const;
     int GetFrameRate() const;
-    SDL_Point& GetFood();
+    SDL_Point& GetSinglePoint();
+    SDL_Point& GetDoublePoint();
     Snake& GetSnake();
 
 private:
     Snake snake;
-    SDL_Point food;
+    SDL_Point singlePoint;
+    SDL_Point doublePoint;
     bool running { true };
     int score { 0 };
     int highScore { 0 };
@@ -41,7 +43,8 @@ private:
     std::uniform_int_distribution<int> random_h;
 
     void LoadHighScore();
-    void PlaceFood();
+    void PlaceSinglePoint();
+    void PlaceDoublePoint();
     void Update();
 };
 

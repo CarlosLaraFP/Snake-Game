@@ -8,7 +8,7 @@ In this project, we build our own C++ application or extend this Snake game, fol
 
 ## New Features Added to the Game
 
-* Writing highest score to local file and always displaying it on screen by reading from this file.
+* Writing highest score to local file and always displaying it on a new game (done).
 * Random spawning of double points and special boosts (such as arc projectiles).
 * Snake can fire a magic projectile from a distance to capture a point by pressing the space bar (which earns more points and removes length).
 * Snake can capture short-lived items to reduce its length.

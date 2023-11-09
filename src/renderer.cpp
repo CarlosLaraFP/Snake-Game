@@ -53,10 +53,15 @@ void Renderer::Render(Game& game)
     SDL_RenderClear(sdl_renderer);
     // everything from the previous frame has been cleared
 
-    // Render food
+    // Render consumable items (multiple types)
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-    block.x = game.GetFood().x * block.w;
-    block.y = game.GetFood().y * block.h;
+    block.x = game.GetSinglePoint().x * block.w;
+    block.y = game.GetSinglePoint().y * block.h;
+    SDL_RenderFillRect(sdl_renderer, &block);
+    // double point item
+    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x80, 0x00, 0xFF);
+    block.x = game.GetDoublePoint().x * block.w;
+    block.y = game.GetDoublePoint().y * block.h;
     SDL_RenderFillRect(sdl_renderer, &block);
 
     // Render snake's body
