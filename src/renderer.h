@@ -3,25 +3,28 @@
 
 #include <vector>
 #include "SDL.h"
-#include "snake.h"
+#include "game.h"
 
-class Renderer {
- public:
-  Renderer(const std::size_t screen_width, const std::size_t screen_height,
-           const std::size_t grid_width, const std::size_t grid_height);
-  ~Renderer();
+class Game;
 
-  void Render(Snake const snake, SDL_Point const &food);
-  void UpdateWindowTitle(int score, int fps);
+class Renderer 
+{
+public:
+    Renderer(const std::size_t screen_width, const std::size_t screen_height,
+             const std::size_t grid_width, const std::size_t grid_height);
+    ~Renderer();
 
- private:
-  SDL_Window *sdl_window;
-  SDL_Renderer *sdl_renderer;
+    void Render(Game& game);
+    void UpdateWindowTitle(const Game& game);
 
-  const std::size_t screen_width;
-  const std::size_t screen_height;
-  const std::size_t grid_width;
-  const std::size_t grid_height;
+private:
+    SDL_Window* sdl_window;
+    SDL_Renderer* sdl_renderer;
+
+    const std::size_t screen_width;
+    const std::size_t screen_height;
+    const std::size_t grid_width;
+    const std::size_t grid_height;
 };
 
 #endif
