@@ -1,15 +1,17 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
 
+#include <memory>
 #include <random>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include "consumable.hpp"
 
 // forward references required when two header files reference each other
 class Controller;
 class Renderer;
+class Consumable;
 
 class Game 
 {
@@ -22,14 +24,19 @@ public:
     int GetHighScore() const;
     int GetSnakeSize() const;
     int GetFrameRate() const;
-    SDL_Point& GetSinglePoint();
-    SDL_Point& GetDoublePoint();
+    void IncrementScore(int value);
+    bool ConsumableCell(int x, int y);
+    void SetNewCoordinates(Consumable& game);
     Snake& GetSnake();
+    std::vector<std::unique_ptr<Consumable>> consumables;
+    /*
+        unique_ptr needs to know the complete type to correctly manage the object, including its size and how to delete it.
+        When the compiler processes templates (like std::unique_ptr), it requires the full definition of the involved types 
+        to generate the correct code for operations such as object destruction. Hence, we need to include it.
+    */
 
 private:
     Snake snake;
-    SDL_Point singlePoint;
-    SDL_Point doublePoint;
     bool running { true };
     int score { 0 };
     int highScore { 0 };
@@ -39,13 +46,9 @@ private:
     std::random_device dev;
     std::mt19937 engine;
     // Define distributions for width and height ranges
-    std::uniform_int_distribution<int> random_w;
-    std::uniform_int_distribution<int> random_h;
+    std::uniform_int_distribution<int> randomWidth;
+    std::uniform_int_distribution<int> randomHeight;
 
     void LoadHighScore();
-    void PlaceSinglePoint();
-    void PlaceDoublePoint();
     void Update();
 };
-
-#endif

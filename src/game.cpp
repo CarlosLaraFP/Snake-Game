@@ -1,16 +1,26 @@
-#include "game.h"
 #include <iostream>
 #include <fstream>
-#include "SDL.h"
+#include "game.h"
+#include "food.hpp"
+#include "boost.hpp"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height), engine(dev()),
-      random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) 
+Game::Game(std::size_t grid_width, std::size_t grid_height) 
+    : snake { grid_width, grid_height }, 
+      engine { dev() },
+      randomWidth { 0, static_cast<int>(grid_width - 1) },
+      randomHeight { 0, static_cast<int>(grid_height - 1) }
 {
     LoadHighScore();
-    PlaceSinglePoint();
-    PlaceDoublePoint();
+
+    auto food = std::make_unique<Food>(grid_width, grid_height);
+    SetNewCoordinates(*food);
+    // Requires implementing Rule of 5 if
+    consumables.emplace_back(std::move(food));
+
+    auto boost = std::make_unique<Boost>(grid_width, grid_height);
+    SetNewCoordinates(*boost);
+    // Requires implementing Rule of 5 if
+    consumables.emplace_back(std::move(boost));
 }
 
 void Game::Run(const Controller& controller, Renderer& renderer, std::size_t target_frame_duration) 
@@ -35,8 +45,8 @@ void Game::Run(const Controller& controller, Renderer& renderer, std::size_t tar
         ++frameCount;
         frame_duration = frame_end - frame_start;
 
-        // After every 500 ms, update the window title (because it displays current score and frame rate).
-        if (frame_end - title_timestamp >= 500) 
+        // After every second, update the window title (because it displays current score and frame rate).
+        if (frame_end - title_timestamp >= 1000) 
         {
             renderer.UpdateWindowTitle(*this);
             frameCount = 0;
@@ -55,67 +65,25 @@ void Game::Run(const Controller& controller, Renderer& renderer, std::size_t tar
     UpdateHighScore();
 }
 
-void Game::Quit() { running = false; }
-
-void Game::PlaceSinglePoint() 
-{
-    int x, y;
-    // Try until the new consumable location is different than any snake coordinates.
-    while (true) {
-        x = random_w(engine);
-        y = random_h(engine);
-        // Check that the location is not occupied by a snake item before placing consumable.
-        if (!snake.SnakeCell(x, y)) 
-        {
-            singlePoint.x = x;
-            singlePoint.y = y;
-            return;
-        }
-    }
-}
-
-void Game::PlaceDoublePoint()
-{
-    int x, y;
-    // Try until the new consumable location  is different than any snake and single point coordinates.
-    while (true)
-    {
-        x = random_w(engine);
-        y = random_h(engine);
-        // Check that the location is not occupied by a snake item before placing consumable.
-        if (!snake.SnakeCell(x, y) && x != static_cast<int>(singlePoint.x) && y != static_cast<int>(singlePoint.y))
-        {
-            doublePoint.x = x;
-            doublePoint.y = y;
-            return;
-        }
-    }
-}
-
 void Game::Update() 
 {
     if (!snake.alive) return;
 
     snake.Update();
 
-    int new_x = static_cast<int>(snake.head_x);
-    int new_y = static_cast<int>(snake.head_y);
+    int newX = static_cast<int>(snake.head_x);
+    int newY = static_cast<int>(snake.head_y);
 
-    // Check if there's food at the new head coordinate
-    if (singlePoint.x == new_x && singlePoint.y == new_y)
+    for (auto& consumable : consumables)
     {
-        ++score;
-        PlaceSinglePoint();
-        snake.GrowBody();
-        snake.speed += 0.02;
-    }
-    else if (doublePoint.x == new_x && doublePoint.y == new_y)
-    {
-        score += 2;
-        PlaceDoublePoint();
-        // special item does not grow snake body and does not increase speed (but is ephemeral)
+        if (consumable->X() == newX && consumable->Y() == newY)
+        {
+            consumable->Update(*this);
+        }
     }
 }
+
+void Game::Quit() { running = false; }
 
 int Game::GetScore() const { return score; }
 
@@ -125,11 +93,35 @@ int Game::GetSnakeSize() const { return snake.size; }
 
 int Game::GetFrameRate() const { return frameCount; }
 
-SDL_Point& Game::GetSinglePoint() { return singlePoint; }
-
-SDL_Point& Game::GetDoublePoint() { return doublePoint; }
+void Game::IncrementScore(int value) { score += value; }
 
 Snake& Game::GetSnake() { return snake; }
+
+void Game::SetNewCoordinates(Consumable& consumable)
+{
+    // Try until the new consumable location is different than any snake coordinates.
+    while (true) {
+        int newX = randomWidth(engine);
+        int newY = randomHeight(engine);
+        // Check that the location is not already occupied by a snake or another consumable.
+        if (!snake.SnakeCell(newX, newY) && !ConsumableCell(newX, newY))
+        {
+            consumable.SetX(newX);
+            consumable.SetY(newY);
+            return;
+        }
+    }
+}
+
+bool Game::ConsumableCell(int x, int y)
+{
+    for (const auto& consumable : consumables) {
+        if (x == consumable->X() && y == consumable->Y()) {
+            return true;
+        }
+    }
+    return false;
+}
 
 void Game::LoadHighScore()
 {

@@ -1,11 +1,10 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 
 #include <vector>
 #include "SDL.h"
-#include "game.h"
 
 class Game;
+class Consumable;
 
 class Renderer 
 {
@@ -25,6 +24,6 @@ private:
     const std::size_t screen_height;
     const std::size_t grid_width;
     const std::size_t grid_height;
-};
 
-#endif
+    void RenderConsumable(SDL_Rect& block, const Consumable& consumable);
+};

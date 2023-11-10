@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include <iostream>
 #include <string>
+#include "consumable.hpp"
 
 Renderer::Renderer(
     const std::size_t screen_width, const std::size_t screen_height,
@@ -54,15 +55,10 @@ void Renderer::Render(Game& game)
     // everything from the previous frame has been cleared
 
     // Render consumable items (multiple types)
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-    block.x = game.GetSinglePoint().x * block.w;
-    block.y = game.GetSinglePoint().y * block.h;
-    SDL_RenderFillRect(sdl_renderer, &block);
-    // double point item
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x80, 0x00, 0xFF);
-    block.x = game.GetDoublePoint().x * block.w;
-    block.y = game.GetDoublePoint().y * block.h;
-    SDL_RenderFillRect(sdl_renderer, &block);
+    for (const auto& consumable : game.consumables)
+    {
+        RenderConsumable(block, *consumable);
+    }
 
     // Render snake's body
     SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -91,6 +87,14 @@ void Renderer::Render(Game& game)
 
     // Update Screen (swap finished back buffer with front buffer) - called once per frame
     SDL_RenderPresent(sdl_renderer);
+}
+
+void Renderer::RenderConsumable(SDL_Rect& block, const Consumable& consumable)
+{
+    SDL_SetRenderDrawColor(sdl_renderer, consumable.R(), consumable.G(), consumable.B(), consumable.A());
+    block.x = consumable.X() * block.w;
+    block.y = consumable.Y() * block.h;
+    SDL_RenderFillRect(sdl_renderer, &block);
 }
 
 void Renderer::UpdateWindowTitle(const Game& game) 
