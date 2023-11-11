@@ -12,6 +12,7 @@ Boost::Boost(std::size_t width, std::size_t height)
 
 void Boost::Update(Game& game)
 {
+    // TODO: Only update as soon as the first in-flight Projectile
     game.IncrementScore(2);
     game.SetNewCoordinates(*this); // revise
     game.GetSnake().IncrementSpeed(-0.02);

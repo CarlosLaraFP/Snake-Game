@@ -8,18 +8,19 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake { grid_width, grid_height }, 
       engine { dev() },
       randomWidth { 0, static_cast<int>(grid_width - 1) },
-      randomHeight { 0, static_cast<int>(grid_height - 1) }
+      randomHeight { 0, static_cast<int>(grid_height - 1) },
+      gridWidth { grid_width }, gridHeight { grid_height }
 {
     LoadHighScore();
 
+    ammoReserves.reserve(ammunitionLimit); // limiting ammo to encourage thoughtful use
+
     auto food = std::make_unique<Food>(grid_width, grid_height);
     SetNewCoordinates(*food);
-    // Requires implementing Rule of 5 if
     consumables.emplace_back(std::move(food));
 
     auto boost = std::make_unique<Boost>(grid_width, grid_height);
     SetNewCoordinates(*boost);
-    // Requires implementing Rule of 5 if
     consumables.emplace_back(std::move(boost));
 }
 
@@ -45,7 +46,7 @@ void Game::Run(const Controller& controller, Renderer& renderer, std::size_t tar
         ++frameCount;
         frame_duration = frame_end - frame_start;
 
-        // After every second, update the window title (because it displays current score and frame rate).
+        // Every second, update the window title (because it displays current score and frame rate).
         if (frame_end - title_timestamp >= 1000) 
         {
             renderer.UpdateWindowTitle(*this);
@@ -74,6 +75,8 @@ void Game::Update()
     int newX = static_cast<int>(snake.head_x);
     int newY = static_cast<int>(snake.head_y);
 
+    // TODO: snake head no longer determines Update to Boost consumable
+
     for (auto& consumable : consumables)
     {
         if (consumable->X() == newX && consumable->Y() == newY)
@@ -93,9 +96,21 @@ int Game::GetSnakeSize() const { return snake.size; }
 
 int Game::GetFrameRate() const { return frameCount; }
 
-void Game::IncrementScore(int value) { score += value; }
+int Game::GetAmmunition() const { return ammoReserves.size(); }
 
 Snake& Game::GetSnake() { return snake; }
+
+void Game::IncrementScore(int value) { score += value; }
+
+void Game::IncrementAmmunition(int value) 
+{ 
+    for (auto i = 0; i < value; ++i)
+    {
+        if (ammoReserves.size() == ammunitionLimit) return;
+
+        ammoReserves.emplace_back(gridWidth, gridHeight);
+    }
+}
 
 void Game::SetNewCoordinates(Consumable& consumable)
 {

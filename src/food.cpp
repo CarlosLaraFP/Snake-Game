@@ -13,6 +13,7 @@ Food::Food(size_t width, size_t height)
 void Food::Update(Game& game)
 {
     game.IncrementScore(1);
+    game.IncrementAmmunition(5);
     game.SetNewCoordinates(*this); // revise
     game.GetSnake().GrowBody();
     game.GetSnake().IncrementSpeed(0.02);

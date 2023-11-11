@@ -16,6 +16,7 @@ public:
     void GrowBody();
     void IncrementSpeed(float value);
     bool SnakeCell(int x, int y);
+    void ChangeDirection(Direction input, Direction opposite);
 
     Direction direction = Direction::kUp;
 

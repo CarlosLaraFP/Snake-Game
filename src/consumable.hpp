@@ -3,7 +3,7 @@
 #include "SDL.h"
 #include "game.h"
 
-// When accessing another class' members, then the other class needs to be defined in the same file for successful compilation.
+// When accessing another class' members in a header file, then the other class needs to be defined in the same file for successful compilation.
 
 class Game;
 

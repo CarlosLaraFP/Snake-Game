@@ -42,9 +42,10 @@ Renderer::~Renderer()
     SDL_Quit();
 }
 
+// TODO: The draw calls to the back buffer should be based on FIFO queue? Does order matter?
 void Renderer::Render(Game& game)
 {
-    // Same SDL_Rect gets reused for all rectangular drawings?
+    // Same SDL_Rect gets reused for all rectangular drawings
     SDL_Rect block;
     block.w = screen_width / grid_width; // 20
     block.h = screen_height / grid_height; // 20
@@ -101,6 +102,7 @@ void Renderer::UpdateWindowTitle(const Game& game)
 {
     std::string title {
         "Snake Score: " + std::to_string(game.GetScore()) + 
+        " Ammunition: " + std::to_string(game.GetAmmunition()) +
         " High Score: " + std::to_string(game.GetHighScore()) + 
         " FPS: " + std::to_string(game.GetFrameRate())
     };

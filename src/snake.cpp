@@ -50,6 +50,13 @@ void Snake::UpdateHead()
     head_y = fmod(head_y + grid_height, grid_height);
 }
 
+void Snake::ChangeDirection(Direction input, Direction opposite)
+{
+    // Do not allow the user to turn the snake into itself (unless it's the starting size)
+    if (direction != opposite || size == 1) direction = input;
+    else return;
+}
+
 void Snake::UpdateBody(SDL_Point& current_head_cell, SDL_Point& prev_head_cell) 
 {
     // Add previous head location to vector
