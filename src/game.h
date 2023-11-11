@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <random>
-#include <deque>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -32,14 +31,16 @@ public:
     int GetSnakeSize() const;
     int GetFrameRate() const;
     int GetAmmunition() const;
+    int GetProjectilesInFlight() const;
     void IncrementScore(int value);
     void IncrementAmmunition(int value);
     bool ConsumableCell(int x, int y);
     void SetNewCoordinates(Consumable& game);
     Snake& GetSnake();
+    // TODO: Investigate more efficient data structures
     std::vector<std::unique_ptr<Consumable>> consumables;
     std::vector<Projectile> ammoReserves;
-    std::deque<Projectile> ammoInFlight;
+    std::vector<Projectile> ammoInFlight;
 
 private:
     size_t gridWidth, gridHeight;
@@ -48,7 +49,7 @@ private:
     int score { 0 };
     int highScore { 0 };
     int frameCount { 0 };
-    int ammunitionLimit { 20 };
+    int ammunitionLimit { 10 };
     std::string highScoreFileName { "highscore.txt" };
     // Create a random number generator
     std::random_device dev;
@@ -59,4 +60,5 @@ private:
 
     void LoadHighScore();
     void Update();
+    void UpdateProjectiles();
 };

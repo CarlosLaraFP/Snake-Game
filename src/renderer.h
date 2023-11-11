@@ -1,10 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include "SDL.h"
 
 class Game;
 class Consumable;
+class Projectile;
+class Snake;
 
 class Renderer 
 {
@@ -25,5 +28,7 @@ private:
     const std::size_t grid_width;
     const std::size_t grid_height;
 
-    void RenderConsumable(SDL_Rect& block, const Consumable& consumable);
+    void RenderConsumables(SDL_Rect& block, std::vector<std::unique_ptr<Consumable>>& consumables);
+    void RenderProjectiles(SDL_Rect& block, std::vector<Projectile>& projectiles);
+    void RenderSnake(SDL_Rect& block, Snake& snake);
 };

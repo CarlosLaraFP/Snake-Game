@@ -17,19 +17,19 @@ void Controller::HandleInput(Game& game) const
             switch (e.key.keysym.sym) 
             {
             case SDLK_UP:
-                game.GetSnake().ChangeDirection(Snake::Direction::kUp, Snake::Direction::kDown);
+                game.GetSnake().ChangeDirection(Direction::kUp, Direction::kDown);
                 break;
 
             case SDLK_DOWN:
-                game.GetSnake().ChangeDirection(Snake::Direction::kDown, Snake::Direction::kUp);
+                game.GetSnake().ChangeDirection(Direction::kDown, Direction::kUp);
                 break;
 
             case SDLK_LEFT:
-                game.GetSnake().ChangeDirection(Snake::Direction::kLeft, Snake::Direction::kRight);
+                game.GetSnake().ChangeDirection(Direction::kLeft, Direction::kRight);
                 break;
 
             case SDLK_RIGHT:
-                game.GetSnake().ChangeDirection(Snake::Direction::kRight, Snake::Direction::kLeft);
+                game.GetSnake().ChangeDirection(Direction::kRight, Direction::kLeft);
                 break;
 
             case SDLK_SPACE:
@@ -37,7 +37,9 @@ void Controller::HandleInput(Game& game) const
                 if (!game.ammoReserves.empty()) 
                 {
                     // TODO: Careful about concurrent access to shared resources
-                    game.ammoInFlight.push_back(std::move(game.ammoReserves.back()));
+                    auto& projectile = game.ammoReserves.back();
+                    projectile.SetVelocity(game.GetSnake().head_x, game.GetSnake().head_y, game.GetSnake().direction);
+                    game.ammoInFlight.emplace_back(std::move(projectile));
                     game.ammoReserves.pop_back();
                 }
                 break;

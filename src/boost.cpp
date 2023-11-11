@@ -1,4 +1,6 @@
+#include <algorithm>
 #include "boost.hpp"
+#include "game.h"
 
 Boost::Boost(std::size_t width, std::size_t height)
 {
@@ -12,8 +14,17 @@ Boost::Boost(std::size_t width, std::size_t height)
 
 void Boost::Update(Game& game)
 {
-    // TODO: Only update as soon as the first in-flight Projectile
-    game.IncrementScore(2);
-    game.SetNewCoordinates(*this); // revise
-    game.GetSnake().IncrementSpeed(-0.02);
+    for (auto i = game.ammoInFlight.begin(); i != game.ammoInFlight.end(); ++i)
+    {
+        if (i->Collision(*this))
+        {
+            game.IncrementScore(2);
+            game.SetNewCoordinates(*this); // revise
+            game.GetSnake().IncrementSpeed(-0.02);
+
+            std::swap(*i, game.ammoInFlight.back());
+            game.ammoInFlight.pop_back();
+            return;
+        }
+    }
 }

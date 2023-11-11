@@ -3,11 +3,11 @@
 #include <vector>
 #include "SDL.h"
 
+enum class Direction { kUp, kDown, kLeft, kRight };
+
 class Snake 
 {
 public:
-    enum class Direction { kUp, kDown, kLeft, kRight };
-
     Snake(std::size_t grid_width, std::size_t grid_height)
         : grid_width{ grid_width }, grid_height { grid_height },
           head_x(grid_width / 2), head_y(grid_height / 2) {}
@@ -18,8 +18,10 @@ public:
     bool SnakeCell(int x, int y);
     void ChangeDirection(Direction input, Direction opposite);
 
-    Direction direction = Direction::kUp;
+    const int& X() const { return static_cast<int>(head_x); }
+    const int& Y() const { return static_cast<int>(head_y); }
 
+    Direction direction = Direction::kUp;
     float speed { 0.1f };
     int size { 1 };
     bool alive { true };

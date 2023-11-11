@@ -1,7 +1,6 @@
 #pragma once
 
 #include "SDL.h"
-#include "game.h"
 
 // When accessing another class' members in a header file, then the other class needs to be defined in the same file for successful compilation.
 
@@ -19,16 +18,19 @@ public:
 	const Uint8& B() const { return b; }
 	const Uint8& A() const { return a; }
 
-	const int& X() const { return x; }
-	const int& Y() const { return y; }
+	const int& X() const { return gridLocation.x; }
+	const int& Y() const { return gridLocation.y; }
 
-	void SetX(int value) { x = value; }
-	void SetY(int value) { y = value; }
+	void SetX(int value) { gridLocation.x = value; }
+	void SetY(int value) { gridLocation.y = value; }
+
+	//SDL_Point& GetPoint() { return gridLocation; }
 
 protected:
-	int x, y;
 	size_t gridWidth, gridHeight;
-	Uint8 r, g, b, a;
-	SDL_Point point;
-	SDL_Point& GetPoint() { return point; }
+	Uint8 r, g, b, a; // needed for SDL_Renderer
+	SDL_Point gridLocation; // needed for instantiation in discrete space
+
+private:
+	float x, y; // needed for motion
 };

@@ -72,18 +72,33 @@ void Game::Update()
 
     snake.Update();
 
-    int newX = static_cast<int>(snake.head_x);
-    int newY = static_cast<int>(snake.head_y);
+    // ORDER MATTERS! WHY??
 
-    // TODO: snake head no longer determines Update to Boost consumable
+    UpdateProjectiles();
 
     for (auto& consumable : consumables)
     {
-        if (consumable->X() == newX && consumable->Y() == newY)
-        {
-            consumable->Update(*this);
-        }
+        consumable->Update(*this);
     }
+}
+
+void Game::UpdateProjectiles()
+{
+    for (auto& projectile : ammoInFlight)
+    {
+        projectile.Update();
+    }
+
+    // Remove projectiles with negative X or Y
+    ammoInFlight.erase(
+        // reordering so that all the elements to be removed are moved to the end
+        std::remove_if(
+            ammoInFlight.begin(),
+            ammoInFlight.end(),
+            [](const Projectile& projectile) { return projectile.IsOffScreen(); }
+        ),
+        ammoInFlight.end()
+    );
 }
 
 void Game::Quit() { running = false; }
@@ -97,6 +112,8 @@ int Game::GetSnakeSize() const { return snake.size; }
 int Game::GetFrameRate() const { return frameCount; }
 
 int Game::GetAmmunition() const { return ammoReserves.size(); }
+
+int Game::GetProjectilesInFlight() const { return ammoInFlight.size(); }
 
 Snake& Game::GetSnake() { return snake; }
 
@@ -130,8 +147,10 @@ void Game::SetNewCoordinates(Consumable& consumable)
 
 bool Game::ConsumableCell(int x, int y)
 {
-    for (const auto& consumable : consumables) {
-        if (x == consumable->X() && y == consumable->Y()) {
+    for (const auto& consumable : consumables) 
+    {
+        if (x == consumable->X() && y == consumable->Y())
+        {
             return true;
         }
     }
