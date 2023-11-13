@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 #include "SDL.h"
 
 enum class Direction { kUp, kDown, kLeft, kRight };
@@ -17,20 +18,23 @@ public:
     void IncrementSpeed(float value);
     bool SnakeCell(int x, int y);
     void ChangeDirection(Direction input, Direction opposite);
+    bool HeadCollision(const int& x, const int& y) const;
+    bool BodyCollision(const int& x, const int& y) const;
 
-    const int& X() const { return static_cast<int>(head_x); }
-    const int& Y() const { return static_cast<int>(head_y); }
+    const int X() const;
+    const int Y() const;
 
-    Direction direction = Direction::kUp;
     float speed { 0.1f };
     int size { 1 };
     bool alive { true };
     float head_x, head_y;
     std::vector<SDL_Point> body;
+    Direction direction = Direction::kUp;
 
 private:
     std::size_t grid_width, grid_height;
     bool growing { false };
+    std::mutex mutex;
 
     void UpdateHead();
     void UpdateBody(SDL_Point& current_cell, SDL_Point& prev_cell);

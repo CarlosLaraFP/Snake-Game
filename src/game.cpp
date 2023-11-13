@@ -13,7 +13,9 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
 {
     LoadHighScore();
 
-    ammoReserves.reserve(ammunitionLimit); // limiting ammo to encourage thoughtful use
+    // limiting ammo to encourage thoughtful use
+    ammoReserves.reserve(ammunitionLimit);
+    ammoInFlight.reserve(ammunitionLimit);
 
     auto food = std::make_unique<Food>(grid_width, grid_height);
     SetNewCoordinates(*food);
@@ -47,7 +49,7 @@ void Game::Run(const Controller& controller, Renderer& renderer, std::size_t tar
         frame_duration = frame_end - frame_start;
 
         // Every second, update the window title (because it displays current score and frame rate).
-        if (frame_end - title_timestamp >= 1000) 
+        if (frame_end - title_timestamp >= 500) 
         {
             renderer.UpdateWindowTitle(*this);
             frameCount = 0;
@@ -66,20 +68,15 @@ void Game::Run(const Controller& controller, Renderer& renderer, std::size_t tar
     UpdateHighScore();
 }
 
-void Game::Update() 
+void Game::Update()     
 {
     if (!snake.alive) return;
 
     snake.Update();
 
-    // ORDER MATTERS! WHY??
-
     UpdateProjectiles();
 
-    for (auto& consumable : consumables)
-    {
-        consumable->Update(*this);
-    }
+    UpdateConsumables();
 }
 
 void Game::UpdateProjectiles()
@@ -99,6 +96,14 @@ void Game::UpdateProjectiles()
         ),
         ammoInFlight.end()
     );
+}
+
+void Game::UpdateConsumables()
+{
+    for (auto& consumable : consumables)
+    {
+        consumable->Update(*this);
+    }
 }
 
 void Game::Quit() { running = false; }
@@ -132,7 +137,8 @@ void Game::IncrementAmmunition(int value)
 void Game::SetNewCoordinates(Consumable& consumable)
 {
     // Try until the new consumable location is different than any snake coordinates.
-    while (true) {
+    while (true) 
+    {
         int newX = randomWidth(engine);
         int newY = randomHeight(engine);
         // Check that the location is not already occupied by a snake or another consumable.
@@ -145,7 +151,7 @@ void Game::SetNewCoordinates(Consumable& consumable)
     }
 }
 
-bool Game::ConsumableCell(int x, int y)
+bool Game::ConsumableCell(int x, int y) const
 {
     for (const auto& consumable : consumables) 
     {

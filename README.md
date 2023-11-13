@@ -9,8 +9,8 @@ In this project, we build our own C++ application or extend this Snake game, fol
 ## New Features Added to the Game
 
 * Writing highest score to local file and always displaying it on a new game (done).
-* Random spawning of double points and special boosts (such as arc projectiles).
-* Snake can fire a magic projectile from a distance to capture a point by pressing the space bar (which earns more points and removes length).
+* Random spawning of boosts, which grant double points and reduce snake speed (done).
+* Snake can fire projectiles to capture a boost by pressing the space bar (done).
 * Snake can capture short-lived items to reduce its length.
 * Random spawning of short-lived poisons that remove projectiles, add length, and/or remove points.
 * Algorithm-driven slow moving NPC snake that fires at us (destroyable with projectiles).

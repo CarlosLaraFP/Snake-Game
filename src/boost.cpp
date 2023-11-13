@@ -20,7 +20,7 @@ void Boost::Update(Game& game)
         {
             game.IncrementScore(2);
             game.SetNewCoordinates(*this); // revise
-            game.GetSnake().IncrementSpeed(-0.02);
+            game.GetSnake().IncrementSpeed(-0.01);
 
             std::swap(*i, game.ammoInFlight.back());
             game.ammoInFlight.pop_back();

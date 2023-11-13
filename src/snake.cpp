@@ -4,13 +4,15 @@
 
 void Snake::Update() 
 {
+    //std::lock_guard<std::mutex> lock { mutex };
+
     // We first capture the head's cell before updating.
-    SDL_Point prev_cell { static_cast<int>(head_x), static_cast<int>(head_y) };
+    SDL_Point prev_cell { this->X(), this->Y() };
 
     UpdateHead();
 
     // Capture the head's cell after updating.
-    SDL_Point current_cell { static_cast<int>(head_x), static_cast<int>(head_y) };
+    SDL_Point current_cell { this->X(), this->Y() };
 
     // Update all of the body vector items if the snake head has moved to a new cell (head changed direction).
     if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y) 
@@ -83,21 +85,30 @@ void Snake::UpdateBody(SDL_Point& current_head_cell, SDL_Point& prev_head_cell)
     }
 }
 
+const int Snake::X() const { return static_cast<int>(head_x); }
+
+const int Snake::Y() const { return static_cast<int>(head_y); }
+
 void Snake::GrowBody() { growing = true; }
 
 void Snake::IncrementSpeed(float value) { speed += value; }
 
+bool Snake::HeadCollision(const int& x, const int& y) const
+{
+    return x == this->X() && y == this->Y();
+}
+
+bool Snake::BodyCollision(const int& x, const int& y) const
+{
+    for (auto const& item : body)
+    {
+        if (x == item.x && y == item.y) return true;
+    }
+    return false;
+}
+
 // Inefficient method to check if cell is occupied by snake.
 bool Snake::SnakeCell(int x, int y) 
 {
-    if (x == static_cast<int>(head_x) && y == static_cast<int>(head_y)) 
-    {
-        return true;
-    }
-    for (auto const &item : body) {
-        if (x == item.x && y == item.y) {
-            return true;
-        }
-    }
-    return false;
+    return HeadCollision(x, y) || BodyCollision(x, y);
 }

@@ -19,9 +19,9 @@ public:
 
 private:
 	size_t gridWidth, gridHeight;
-	//SDL_Point gridLocation;
 	Direction direction;
 	float x, y;
     float speed { 0.5f };
-    int maxDistance { 5 };
+    int maxDistance { 5 }; // if const, std::swap does not work
+	// The presence of a const member variable means the class cannot have a default move assignment operator.
 };

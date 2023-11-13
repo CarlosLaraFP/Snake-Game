@@ -132,7 +132,7 @@ void Renderer::UpdateWindowTitle(const Game& game)
         " Ammunition: " + std::to_string(game.GetAmmunition()) +
         //" Projectiles In Flight: " + std::to_string(game.GetProjectilesInFlight()) +
         " High Score: " + std::to_string(game.GetHighScore()) + 
-        " FPS: " + std::to_string(game.GetFrameRate())
+        " FPS: " + std::to_string(game.GetFrameRate() * 2)
     };
 
     SDL_SetWindowTitle(sdl_window, title.c_str());

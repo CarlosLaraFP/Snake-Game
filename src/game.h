@@ -34,11 +34,12 @@ public:
     int GetProjectilesInFlight() const;
     void IncrementScore(int value);
     void IncrementAmmunition(int value);
-    bool ConsumableCell(int x, int y);
+    bool ConsumableCell(int x, int y) const;
     void SetNewCoordinates(Consumable& game);
     Snake& GetSnake();
     // TODO: Investigate more efficient data structures
     std::vector<std::unique_ptr<Consumable>> consumables;
+    // TODO: Consider combining them
     std::vector<Projectile> ammoReserves;
     std::vector<Projectile> ammoInFlight;
 
@@ -49,7 +50,7 @@ private:
     int score { 0 };
     int highScore { 0 };
     int frameCount { 0 };
-    int ammunitionLimit { 10 };
+    const int ammunitionLimit { 10 };
     std::string highScoreFileName { "highscore.txt" };
     // Create a random number generator
     std::random_device dev;
@@ -61,4 +62,5 @@ private:
     void LoadHighScore();
     void Update();
     void UpdateProjectiles();
+    void UpdateConsumables();
 };

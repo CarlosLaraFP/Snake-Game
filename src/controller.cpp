@@ -36,7 +36,6 @@ void Controller::HandleInput(Game& game) const
                 // O(1)
                 if (!game.ammoReserves.empty()) 
                 {
-                    // TODO: Careful about concurrent access to shared resources
                     auto& projectile = game.ammoReserves.back();
                     projectile.SetVelocity(game.GetSnake().head_x, game.GetSnake().head_y, game.GetSnake().direction);
                     game.ammoInFlight.emplace_back(std::move(projectile));

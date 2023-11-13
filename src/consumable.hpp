@@ -6,6 +6,7 @@
 
 class Game;
 
+// abstract class
 class Consumable
 {
 public:
@@ -23,8 +24,6 @@ public:
 
 	void SetX(int value) { gridLocation.x = value; }
 	void SetY(int value) { gridLocation.y = value; }
-
-	//SDL_Point& GetPoint() { return gridLocation; }
 
 protected:
 	size_t gridWidth, gridHeight;
