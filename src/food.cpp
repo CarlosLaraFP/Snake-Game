@@ -16,7 +16,7 @@ void Food::Update(Game& game)
     if (game.GetSnake().HeadCollision(this->GetCoordinates()))
     {
         game.IncrementScore(1);
-        game.IncrementAmmunition(5);
+        game.IncrementAmmunition(2);
         game.SetNewCoordinates(*this);
         game.GetSnake().GrowBody();
         game.GetSnake().IncrementSpeed(0.02);

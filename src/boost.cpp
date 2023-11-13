@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <mutex>
 #include "boost.hpp"
 #include "game.h"
 
@@ -14,6 +15,8 @@ Boost::Boost(std::size_t width, std::size_t height)
 
 void Boost::Update(Game& game)
 {
+    std::lock_guard<std::mutex> lock { game.mutex };
+
     for (auto projectile = game.ammoInFlight.begin(); projectile != game.ammoInFlight.end(); ++projectile)
     {
         if (projectile->Collision(*this))

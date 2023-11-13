@@ -39,7 +39,7 @@ void Game::Run(const Controller& controller, Renderer& renderer, std::size_t tar
 
         // Input, Update, Render - the main game loop.
         controller.HandleInput(*this);
-        this->Update();
+        this->UpdateAsync();
         renderer.Render(*this);
 
         frame_end = SDL_GetTicks();
@@ -68,19 +68,27 @@ void Game::Run(const Controller& controller, Renderer& renderer, std::size_t tar
     UpdateHighScore();
 }
 
-void Game::Update()     
+void Game::UpdateAsync()     
 {
     if (!snake.alive) return;
 
-    snake.Update();
+    // Updating game objects concurrently by category.
+    // Note this is for demonstration purposes and should only be implemented for computationally intensive tasks.
 
-    UpdateProjectiles();
+    // Avoids holding onto completed futures and ensure that the resources associated with the asynchronous operations are released.
+    updates.clear();
+    // Passing pointers to the async tasks instead of copying
+    updates.emplace_back(std::async(std::launch::async, &Snake::Update, &snake));
+    updates.emplace_back(std::async(std::launch::async, &Game::UpdateProjectiles, this));
+    updates.emplace_back(std::async(std::launch::async, &Game::UpdateConsumables, this));
 
-    UpdateConsumables();
+    for (auto& update : updates) { update.wait(); }
 }
 
 void Game::UpdateProjectiles()
 {
+    std::lock_guard<std::mutex> lock { mutex };
+
     for (auto& projectile : ammoInFlight)
     {
         projectile.Update();

@@ -3,6 +3,7 @@
 #include <memory>
 #include <random>
 #include <mutex>
+#include <future>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -43,6 +44,8 @@ public:
     // TODO: Consider combining them
     std::vector<Projectile> ammoReserves;
     std::vector<Projectile> ammoInFlight;
+    // To ensure thread-safe reads/writes
+    std::mutex mutex;
 
 private:
     size_t gridWidth, gridHeight;
@@ -59,11 +62,11 @@ private:
     // Define distributions for width and height ranges
     std::uniform_int_distribution<int> randomWidth;
     std::uniform_int_distribution<int> randomHeight;
-    // To ensure thread-safe reads/writes
-    std::mutex mutex;
+    // Asynchronous update tasks
+    std::vector<std::future<void>> updates;
 
     void LoadHighScore();
-    void Update();
+    void UpdateAsync();
     void UpdateProjectiles();
     void UpdateConsumables();
 };
