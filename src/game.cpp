@@ -139,23 +139,25 @@ void Game::SetNewCoordinates(Consumable& consumable)
     // Try until the new consumable location is different than any snake coordinates.
     while (true) 
     {
-        int newX = randomWidth(engine);
-        int newY = randomHeight(engine);
+        SDL_Point newCoordinates { randomWidth(engine) , randomHeight(engine) };
+
         // Check that the location is not already occupied by a snake or another consumable.
-        if (!snake.SnakeCell(newX, newY) && !ConsumableCell(newX, newY))
+        if (!snake.SnakeCell(newCoordinates) && !ConsumableCell(newCoordinates))
         {
-            consumable.SetX(newX);
-            consumable.SetY(newY);
+            // replace with SDL_Point move semantics
+            consumable.SetCoordinates(newCoordinates.x, newCoordinates.y);
             return;
         }
     }
 }
 
-bool Game::ConsumableCell(int x, int y) const
+bool Game::ConsumableCell(const SDL_Point& point) const
 {
     for (const auto& consumable : consumables) 
     {
-        if (x == consumable->X() && y == consumable->Y())
+        auto& location = consumable->GetCoordinates();
+
+        if (point.x == location.x && point.y == location.x)
         {
             return true;
         }

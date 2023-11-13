@@ -4,15 +4,13 @@
 
 void Snake::Update() 
 {
-    //std::lock_guard<std::mutex> lock { mutex };
-
     // We first capture the head's cell before updating.
-    SDL_Point prev_cell { this->X(), this->Y() };
+    SDL_Point prev_cell = this->GetCoordinates();
 
     UpdateHead();
 
     // Capture the head's cell after updating.
-    SDL_Point current_cell { this->X(), this->Y() };
+    SDL_Point current_cell = this->GetCoordinates();
 
     // Update all of the body vector items if the snake head has moved to a new cell (head changed direction).
     if (current_cell.x != prev_cell.x || current_cell.y != prev_cell.y) 
@@ -25,6 +23,9 @@ void Snake::Update()
 // The origin (0, 0) is at the top-left corner (X increases to the right and Y increases downward).
 void Snake::UpdateHead() 
 {
+    // locking section due to concurrent access to 'speed' variable
+    std::unique_lock<std::mutex> lock { mutex };
+
     switch (direction) 
     {
     case Direction::kUp:
@@ -44,6 +45,8 @@ void Snake::UpdateHead()
         break;
     }
 
+    lock.unlock();
+
     // Wrap the Snake around to the beginning if going off of the screen.
     // fmod computes the floating-point remainder of the division of two numbers.
     // Adding grid_width and grid_height guarantees fmod always returns a positive remainder.
@@ -61,6 +64,9 @@ void Snake::ChangeDirection(Direction input, Direction opposite)
 
 void Snake::UpdateBody(SDL_Point& current_head_cell, SDL_Point& prev_head_cell) 
 {
+    // locking section due to concurrent access to 'growing' variable
+    std::unique_lock<std::mutex> lock { mutex };
+    
     // Add previous head location to vector
     body.push_back(prev_head_cell);
 
@@ -75,6 +81,8 @@ void Snake::UpdateBody(SDL_Point& current_head_cell, SDL_Point& prev_head_cell)
         size++;
     }
 
+    lock.unlock();
+
     // Check if the snake has died.
     for (const auto& item : body) 
     {
@@ -85,30 +93,43 @@ void Snake::UpdateBody(SDL_Point& current_head_cell, SDL_Point& prev_head_cell)
     }
 }
 
-const int Snake::X() const { return static_cast<int>(head_x); }
-
-const int Snake::Y() const { return static_cast<int>(head_y); }
-
-void Snake::GrowBody() { growing = true; }
-
-void Snake::IncrementSpeed(float value) { speed += value; }
-
-bool Snake::HeadCollision(const int& x, const int& y) const
-{
-    return x == this->X() && y == this->Y();
+const SDL_Point Snake::GetCoordinates() const 
+{ 
+    return SDL_Point { static_cast<int>(head_x), static_cast<int>(head_y) };
 }
 
-bool Snake::BodyCollision(const int& x, const int& y) const
+void Snake::GrowBody() 
+{ 
+    std::lock_guard<std::mutex> lock { mutex };
+
+    growing = true; 
+}
+
+void Snake::IncrementSpeed(float value) 
 {
-    for (auto const& item : body)
+    std::lock_guard<std::mutex> lock { mutex };
+
+    speed += value; 
+}
+
+bool Snake::HeadCollision(const SDL_Point& point) const
+{
+    SDL_Point current_cell = this->GetCoordinates();
+
+    return point.x == current_cell.x && point.y == current_cell.y;
+}
+
+bool Snake::BodyCollision(const SDL_Point& point) const
+{
+    for (const auto& item : body)
     {
-        if (x == item.x && y == item.y) return true;
+        if (point.x == item.x && point.y == item.y) return true;
     }
     return false;
 }
 
-// Inefficient method to check if cell is occupied by snake.
-bool Snake::SnakeCell(int x, int y) 
+// Check if cell is occupied by snake.
+bool Snake::SnakeCell(const SDL_Point& point)
 {
-    return HeadCollision(x, y) || BodyCollision(x, y);
+    return HeadCollision(point) || BodyCollision(point);
 }

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <random>
+#include <mutex>
 #include "SDL.h"
 #include "controller.h"
 #include "renderer.h"
@@ -34,7 +35,7 @@ public:
     int GetProjectilesInFlight() const;
     void IncrementScore(int value);
     void IncrementAmmunition(int value);
-    bool ConsumableCell(int x, int y) const;
+    bool ConsumableCell(const SDL_Point& point) const;
     void SetNewCoordinates(Consumable& game);
     Snake& GetSnake();
     // TODO: Investigate more efficient data structures
@@ -58,6 +59,8 @@ private:
     // Define distributions for width and height ranges
     std::uniform_int_distribution<int> randomWidth;
     std::uniform_int_distribution<int> randomHeight;
+    // To ensure thread-safe reads/writes
+    std::mutex mutex;
 
     void LoadHighScore();
     void Update();

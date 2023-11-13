@@ -14,15 +14,15 @@ Boost::Boost(std::size_t width, std::size_t height)
 
 void Boost::Update(Game& game)
 {
-    for (auto i = game.ammoInFlight.begin(); i != game.ammoInFlight.end(); ++i)
+    for (auto projectile = game.ammoInFlight.begin(); projectile != game.ammoInFlight.end(); ++projectile)
     {
-        if (i->Collision(*this))
+        if (projectile->Collision(*this))
         {
             game.IncrementScore(2);
             game.SetNewCoordinates(*this); // revise
             game.GetSnake().IncrementSpeed(-0.01);
 
-            std::swap(*i, game.ammoInFlight.back());
+            std::swap(*projectile, game.ammoInFlight.back());
             game.ammoInFlight.pop_back();
             return;
         }

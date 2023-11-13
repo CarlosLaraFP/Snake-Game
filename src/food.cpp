@@ -13,12 +13,11 @@ Food::Food(size_t width, size_t height)
 
 void Food::Update(Game& game)
 {
-    if (game.GetSnake().HeadCollision(this->X(), this->Y()))
+    if (game.GetSnake().HeadCollision(this->GetCoordinates()))
     {
         game.IncrementScore(1);
         game.IncrementAmmunition(5);
-        game.SetNewCoordinates(*this); // revise
-        // mutation methods must be locked / std::shard_ptr<Snake>
+        game.SetNewCoordinates(*this);
         game.GetSnake().GrowBody();
         game.GetSnake().IncrementSpeed(0.02);
     }

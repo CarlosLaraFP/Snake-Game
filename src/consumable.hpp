@@ -19,11 +19,13 @@ public:
 	const Uint8& B() const { return b; }
 	const Uint8& A() const { return a; }
 
-	const int& X() const { return gridLocation.x; }
-	const int& Y() const { return gridLocation.y; }
+	const SDL_Point& GetCoordinates() const { return gridLocation; }
 
-	void SetX(int value) { gridLocation.x = value; }
-	void SetY(int value) { gridLocation.y = value; }
+	void SetCoordinates(int x, int y)
+	{
+		gridLocation.x = x;
+		gridLocation.y = y;
+	}
 
 protected:
 	size_t gridWidth, gridHeight;
@@ -31,5 +33,5 @@ protected:
 	SDL_Point gridLocation; // needed for instantiation in discrete space
 
 private:
-	float x, y; // needed for motion
+	float x_, y_; // needed for motion
 };

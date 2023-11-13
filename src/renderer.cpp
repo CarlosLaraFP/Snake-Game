@@ -74,8 +74,9 @@ void Renderer::RenderConsumables(SDL_Rect& block, std::vector<std::unique_ptr<Co
     for (const auto& consumable : consumables)
     {
         SDL_SetRenderDrawColor(sdl_renderer, consumable->R(), consumable->G(), consumable->B(), consumable->A());
-        block.x = consumable->X() * block.w;
-        block.y = consumable->Y() * block.h;
+        auto& point = consumable->GetCoordinates();
+        block.x = point.x * block.w;
+        block.y = point.y * block.h;
         SDL_RenderFillRect(sdl_renderer, &block);
     }
 }
@@ -88,7 +89,7 @@ void Renderer::RenderProjectiles(SDL_Rect& block, std::vector<Projectile>& proje
     // Render projectiles with non-negative X and Y
     for (const auto& projectile : projectiles) 
     {
-        if (projectile.X() >= 0 && projectile.Y() >= 0) 
+        if (projectile.X() >= 0 && projectile.Y() >= 0)
         {
             block.x = projectile.X() * block.w;
             block.y = projectile.Y() * block.h;
@@ -110,8 +111,9 @@ void Renderer::RenderSnake(SDL_Rect& block, Snake& snake)
     }
 
     // Render snake's head
-    block.x = snake.X() * block.w;
-    block.y = snake.Y() * block.h;
+    auto& point = snake.GetCoordinates();
+    block.x = point.x * block.w;
+    block.y = point.y * block.h;
 
     if (snake.alive)
     {

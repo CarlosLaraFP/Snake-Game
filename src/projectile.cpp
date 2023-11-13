@@ -31,7 +31,9 @@ void Projectile::Update()
 
 bool Projectile::Collision(const Consumable& consumable) const
 {
-    return this->X() == consumable.X() && this->Y() == consumable.Y();
+    auto& point = consumable.GetCoordinates();
+
+    return this->X() == point.x && this->Y() == point.y;
 }
 
 bool Projectile::IsOffScreen() const

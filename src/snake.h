@@ -16,13 +16,12 @@ public:
     void Update();
     void GrowBody();
     void IncrementSpeed(float value);
-    bool SnakeCell(int x, int y);
+    bool SnakeCell(const SDL_Point& point);
     void ChangeDirection(Direction input, Direction opposite);
-    bool HeadCollision(const int& x, const int& y) const;
-    bool BodyCollision(const int& x, const int& y) const;
+    bool HeadCollision(const SDL_Point& point) const;
+    bool BodyCollision(const SDL_Point& point) const;
 
-    const int X() const;
-    const int Y() const;
+    const SDL_Point GetCoordinates() const;
 
     float speed { 0.1f };
     int size { 1 };
