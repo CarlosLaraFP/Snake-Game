@@ -27,7 +27,6 @@ public:
     Game(std::size_t grid_width, std::size_t grid_height);
     void Run(const Controller& controller, Renderer& renderer, std::size_t target_frame_duration);
     void Quit();
-    void UpdateHighScore();
     int GetScore() const;
     int GetHighScore() const;
     int GetSnakeSize() const;
@@ -39,9 +38,7 @@ public:
     bool ConsumableCell(const SDL_Point& point) const;
     void SetNewCoordinates(Consumable& game);
     Snake& GetSnake();
-    // TODO: Investigate more efficient data structures
     std::vector<std::unique_ptr<Consumable>> consumables;
-    // TODO: Consider combining them
     std::vector<Projectile> ammoReserves;
     std::vector<Projectile> ammoInFlight;
     // To ensure thread-safe reads/writes
@@ -66,6 +63,7 @@ private:
     std::vector<std::future<void>> updates;
 
     void LoadHighScore();
+    void UpdateHighScore();
     void UpdateAsync();
     void UpdateProjectiles();
     void UpdateConsumables();
