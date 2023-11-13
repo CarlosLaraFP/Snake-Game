@@ -94,7 +94,9 @@ void Snake::UpdateBody(SDL_Point& current_head_cell, SDL_Point& prev_head_cell)
 }
 
 const SDL_Point Snake::GetCoordinates() const 
-{ 
+{
+    std::lock_guard<std::mutex> lock { mutex };
+
     return SDL_Point { static_cast<int>(head_x), static_cast<int>(head_y) };
 }
 

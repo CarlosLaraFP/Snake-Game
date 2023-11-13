@@ -33,7 +33,8 @@ public:
 private:
     std::size_t grid_width, grid_height;
     bool growing { false };
-    std::mutex mutex;
+    // mutable allows locking a mutex in readonly methods
+    mutable std::mutex mutex;
 
     void UpdateHead();
     void UpdateBody(SDL_Point& current_cell, SDL_Point& prev_cell);
