@@ -14,8 +14,8 @@ public:
 	bool IsOffScreen() const;
 	bool Collision(const Consumable& consumable) const;
 
-	const int& X() const { return static_cast<int>(x); }
-	const int& Y() const { return static_cast<int>(y); }
+	const int X() const { return static_cast<int>(x); }
+	const int Y() const { return static_cast<int>(y); }
 
 private:
 	size_t gridWidth, gridHeight;

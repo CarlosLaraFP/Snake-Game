@@ -2,7 +2,7 @@
 
 The code for this repo was inspired by [this](https://codereview.stackexchange.com/questions/212296/snake-game-in-c-with-sdl) excellent StackOverflow post and set of responses.
 
-<img src="snake_game.gif"/>
+<img src="snake_fire.gif"/>
 
 The objective of the game is to capture as many points as possible while moving a snake using up, down, left, and right keys. 
 
